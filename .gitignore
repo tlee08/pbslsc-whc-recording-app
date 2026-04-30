@@ -142,5 +142,11 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
+# Build output
+build/
+
+# React Router types
+.react-router/
+
 # Data files
 data/

@@ -15,6 +15,7 @@ import {
   useTheme,
 } from "@mui/material";
 import React from "react";
+import { Link } from "react-router";
 import { DrawerContext } from "../../contexts/DrawerContext";
 import CatDropdownSet from "./CatDropdownSet";
 
@@ -33,7 +34,8 @@ export const NavDrawer = () => {
         {["Preregister", "Results", "Admin"].map((e) => (
           <ListItem key={`${e}_list`} disablePadding>
             <ListItemButton
-              href={`/${e}`}
+              component={Link}
+              to={`/${e}`}
               onClick={() => isMobile && setMobileOpen(false)}
             >
               <ListItemText primary={e} />
