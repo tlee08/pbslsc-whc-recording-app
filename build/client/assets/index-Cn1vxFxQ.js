@@ -1,1 +1,0 @@
-import{w as o,q as s}from"./chunk-JZWAC4HX-BunqcFdX.js";import{B as r,A as e,q as n,p as i}from"./Toolbar-U7vFHVAX.js";const p=o(function(){return s.jsx(r,{sx:{display:"flex",flexDirection:"column"},children:s.jsx(e,{position:"static",children:s.jsx(n,{children:s.jsx(i,{sx:{fontSize:{xs:"1.25rem",sm:"2rem"}},children:"Index"})})})})});export{p as default};
