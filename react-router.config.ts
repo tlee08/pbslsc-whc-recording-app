@@ -4,5 +4,5 @@ export default {
   appDirectory: "src",
   // Server-side render by default, to enable SPA mode set this to `false`
   ssr: false,
-  basename: "/pbslsc-whc-recording-app",
+  basename: "/pbslsc-whc-recording-app/",
 } satisfies Config;

@@ -100,35 +100,43 @@ export default function Admin() {
           }}
         >
           <Button
+            component="label"
             variant="contained"
             startIcon={<CloudUploadIcon />}
-            onClick={onExport}
-            fullWidth={false}
             size="small"
           >
-            Export
+            Upload eventStructure
+            <input
+              type="file"
+              onChange={onEventStructureUpload}
+              style={{ clip: "rect(0 0 0 0)", width: 1 }}
+            />
           </Button>
           <Button
             component="label"
             variant="contained"
-            startIcon={<CloudDownloadIcon />}
+            startIcon={<CloudUploadIcon />}
             size="small"
           >
-            Import
+            Upload members
+            <input
+              type="file"
+              onChange={onMembersUpload}
+              style={{ clip: "rect(0 0 0 0)", width: 1 }}
+            />
+          </Button>
+          <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+            size="small"
+          >
+            Upload Results
             <input
               type="file"
               onChange={onImport}
               style={{ clip: "rect(0 0 0 0)", width: 1 }}
             />
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => sessionStorage.clear()}
-            startIcon={<DeleteIcon />}
-            color="error"
-            size="small"
-          >
-            Clear
           </Button>
         </Paper>
 
@@ -145,30 +153,22 @@ export default function Admin() {
           }}
         >
           <Button
-            component="label"
             variant="contained"
             startIcon={<CloudDownloadIcon />}
+            onClick={onExport}
+            fullWidth={false}
             size="small"
           >
-            Upload eventStructure
-            <input
-              type="file"
-              onChange={onEventStructureUpload}
-              style={{ clip: "rect(0 0 0 0)", width: 1 }}
-            />
+            Download Results
           </Button>
           <Button
-            component="label"
             variant="contained"
-            startIcon={<CloudDownloadIcon />}
+            onClick={() => sessionStorage.clear()}
+            startIcon={<DeleteIcon />}
+            color="error"
             size="small"
           >
-            Upload members
-            <input
-              type="file"
-              onChange={onMembersUpload}
-              style={{ clip: "rect(0 0 0 0)", width: 1 }}
-            />
+            Clear All Data
           </Button>
         </Paper>
 
