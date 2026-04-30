@@ -9,7 +9,7 @@
     "build": "react-router build",
     "lint": "react-router typegen && tsc && eslint .",
     "preview": "vite preview",
-    "deploy": "react-router build && gh-pages -d build/client"
+    "deploy": "react-router build && cp build/client/index.html build/client/404.html && gh-pages -d build/client"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
