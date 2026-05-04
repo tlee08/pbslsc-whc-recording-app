@@ -3,71 +3,21 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { AppBar, Box, Button, Paper, Toolbar, Typography } from "@mui/material";
-import { saveAs } from "file-saver";
 import React from "react";
 import {
+  downloadJson,
   eventStructureKey,
   membersKey,
   readEventStructure,
   readMembers,
   readResults,
   resultsKey,
+  uploadJson,
 } from "../utils/storageUtils";
 
 export default function Admin() {
-  const onExport = () => {
-    const blob = new Blob([JSON.stringify(readResults())], {
-      type: "text/plain;charset=utf-8",
-    });
-    saveAs(blob, "whc_results.json");
-  };
-
-  const onImport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files === null) return;
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataString = e?.target?.result;
-        if (typeof dataString !== "string") return;
-        sessionStorage.setItem(resultsKey(), dataString);
-        window.location.reload();
-      };
-      reader.readAsText(file);
-    }
-  };
-
-  const onEventStructureUpload = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    if (event.target.files === null) return;
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataString = e?.target?.result;
-        if (typeof dataString !== "string") return;
-        sessionStorage.setItem(eventStructureKey(), dataString);
-        window.location.reload();
-      };
-      reader.readAsText(file);
-    }
-  };
-
-  const onMembersUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files === null) return;
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataString = e?.target?.result;
-        if (typeof dataString !== "string") return;
-        sessionStorage.setItem(membersKey(), dataString);
-        window.location.reload();
-      };
-      reader.readAsText(file);
-    }
-  };
+  const handleUpload = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    uploadJson(e, key);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -108,7 +58,7 @@ export default function Admin() {
             Upload eventStructure
             <input
               type="file"
-              onChange={onEventStructureUpload}
+              onChange={handleUpload(eventStructureKey())}
               style={{ clip: "rect(0 0 0 0)", width: 1 }}
             />
           </Button>
@@ -121,7 +71,7 @@ export default function Admin() {
             Upload members
             <input
               type="file"
-              onChange={onMembersUpload}
+              onChange={handleUpload(membersKey())}
               style={{ clip: "rect(0 0 0 0)", width: 1 }}
             />
           </Button>
@@ -134,7 +84,7 @@ export default function Admin() {
             Upload Results
             <input
               type="file"
-              onChange={onImport}
+              onChange={handleUpload(resultsKey())}
               style={{ clip: "rect(0 0 0 0)", width: 1 }}
             />
           </Button>
@@ -155,7 +105,7 @@ export default function Admin() {
           <Button
             variant="contained"
             startIcon={<CloudDownloadIcon />}
-            onClick={onExport}
+            onClick={() => downloadJson(readResults(), "whc_results.json")}
             fullWidth={false}
             size="small"
           >

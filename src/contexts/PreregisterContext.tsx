@@ -1,6 +1,12 @@
 import React from "react";
 import type Member from "../models/Member";
 
+function dedupeAndSort(items: Member[]): Member[] {
+  return items
+    .filter((i, idx, self) => idx === self.findIndex((j) => j.id === i.id))
+    .sort((a, b) => a.id.toLowerCase().localeCompare(b.id.toLowerCase()));
+}
+
 type PreregisterContextInterface = {
   preregisterState: Member[];
   setPreregisterState: React.Dispatch<React.SetStateAction<Member[]>>;
@@ -24,7 +30,7 @@ interface PreregisterProviderProps {
 function PreregisterContextProvider({ children }: PreregisterProviderProps) {
   const [preregisterState, setPreregisterState] = React.useState<Member[]>(
     () => {
-      if (typeof window === "undefined") return;
+      if (typeof window === "undefined") return [];
       const preregister = sessionStorage.getItem("preregister");
       return preregister ? JSON.parse(preregister) : [];
     },
@@ -38,28 +44,21 @@ function PreregisterContextProvider({ children }: PreregisterProviderProps) {
 
   // on-action: adding item
   const addPreregisterItem = (item: Member | null): void => {
-    // if item is undefined, don't add
     if (!item) return;
-    // otherwise, add item
-    const items = [...preregisterState, item]
-      .filter((i, idx, self) => idx === self.findIndex((j) => j.id === i.id))
-      .sort((a, b) => a.id.toLowerCase().localeCompare(b.id.toLowerCase()));
-    setPreregisterState(items);
+    setPreregisterState(dedupeAndSort([...preregisterState, item]));
   };
+
   // on-action: removing item
   const removePreregisterItem = (index: number): void => {
     const items = [...preregisterState];
     items.splice(index, 1);
     setPreregisterState(items);
   };
+
   // on-action: bulk add current items to preregisterState
   const bulkAddPreregisterItems = (items: (Member | null)[]) => {
-    setPreregisterState(
-      [...preregisterState, ...items]
-        .filter((i) => i != null)
-        .filter((i, idx, self) => idx === self.findIndex((j) => j.id === i.id))
-        .sort((a, b) => a.id.toLowerCase().localeCompare(b.id.toLowerCase())),
-    );
+    const validItems = items.filter((i): i is Member => i != null);
+    setPreregisterState(dedupeAndSort([...preregisterState, ...validItems]));
   };
 
   return (

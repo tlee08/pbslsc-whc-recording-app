@@ -163,7 +163,7 @@ export default function Results() {
                 }
                 size="small"
               >
-                Add
+                Add to Preregister
               </Button>
             </Box>
           </Paper>
