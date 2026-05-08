@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
-import { useCatContext } from "../../hooks/useCatContext";
+import { useCatStore } from "../../stores/catStore";
+import { useEventStructureStore } from "../../stores/eventStructureStore";
 import {
   getDatesOptions,
   getEventsOptions,
@@ -8,11 +9,12 @@ import {
 import CatDropdown from "./CatDropdown";
 
 export default function CatDropdownSet() {
-  const { date, setDate, event, setEvent, gender, setGender } = useCatContext();
+  const { date, setDate, event, setEvent, gender, setGender } = useCatStore();
+  const eventStructure = useEventStructureStore((s) => s.eventStructure);
 
-  const datesOptions = getDatesOptions();
-  const eventsOptions = getEventsOptions(date);
-  const gendersOptions = getGendersOptions(date, event);
+  const datesOptions = getDatesOptions(eventStructure);
+  const eventsOptions = getEventsOptions(eventStructure, date);
+  const gendersOptions = getGendersOptions(eventStructure, date, event);
 
   return (
     <Box

@@ -20,20 +20,20 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { useCatContext } from "../hooks/useCatContext";
-import { usePreregisterContext } from "../hooks/usePreregisterContext";
-import { readMembers } from "../utils/storageUtils";
+import { useCatStore } from "../stores/catStore";
+import { useMembersStore } from "../stores/membersStore";
+import { usePreregisterStore } from "../stores/preregisterStore";
 
 export default function Preregister() {
-  const { gender: genderState } = useCatContext();
+  const { gender: genderState } = useCatStore();
   const {
     preregisterState,
     setPreregisterState,
     addPreregisterItem,
     removePreregisterItem,
-  } = usePreregisterContext();
+  } = usePreregisterStore();
+  const members = useMembersStore((s) => s.members);
   const [clearDialogOpen, setClearDialogOpen] = React.useState(false);
-  const members = React.useMemo(() => readMembers(), []);
 
   const filteredPreregisterState = React.useMemo(
     () => preregisterState.filter((member) => member.gender === genderState),

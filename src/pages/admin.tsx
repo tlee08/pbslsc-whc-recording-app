@@ -4,20 +4,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { AppBar, Box, Button, Paper, Toolbar, Typography } from "@mui/material";
 import React from "react";
-import {
-  downloadJson,
-  eventStructureKey,
-  membersKey,
-  readEventStructure,
-  readMembers,
-  readResults,
-  resultsKey,
-  uploadJson,
-} from "../utils/storageUtils";
+import { downloadJson, uploadEventStructure, uploadMembers, uploadResults } from "../utils/storageUtils";
+import { useCatStore } from "../stores/catStore";
+import { useEventStructureStore } from "../stores/eventStructureStore";
+import { useMembersStore } from "../stores/membersStore";
+import { usePreregisterStore } from "../stores/preregisterStore";
+import { useResultsStore } from "../stores/resultsStore";
 
 export default function Admin() {
-  const handleUpload = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
-    uploadJson(e, key);
+  const eventStructure = useEventStructureStore((s) => s.eventStructure);
+  const members = useMembersStore((s) => s.members);
+  const results = useResultsStore((s) => s.results);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -58,7 +55,7 @@ export default function Admin() {
             Upload eventStructure
             <input
               type="file"
-              onChange={handleUpload(eventStructureKey())}
+              onChange={uploadEventStructure}
               style={{ clip: "rect(0 0 0 0)", width: 1 }}
             />
           </Button>
@@ -71,7 +68,7 @@ export default function Admin() {
             Upload members
             <input
               type="file"
-              onChange={handleUpload(membersKey())}
+              onChange={uploadMembers}
               style={{ clip: "rect(0 0 0 0)", width: 1 }}
             />
           </Button>
@@ -84,7 +81,7 @@ export default function Admin() {
             Upload Results
             <input
               type="file"
-              onChange={handleUpload(resultsKey())}
+              onChange={uploadResults}
               style={{ clip: "rect(0 0 0 0)", width: 1 }}
             />
           </Button>
@@ -105,7 +102,7 @@ export default function Admin() {
           <Button
             variant="contained"
             startIcon={<CloudDownloadIcon />}
-            onClick={() => downloadJson(readResults(), "whc_results.json")}
+            onClick={() => downloadJson(results, "whc_results.json")}
             fullWidth={false}
             size="small"
           >
@@ -113,7 +110,13 @@ export default function Admin() {
           </Button>
           <Button
             variant="contained"
-            onClick={() => sessionStorage.clear()}
+            onClick={() => {
+              useEventStructureStore.getState().reset();
+              useMembersStore.getState().reset();
+              useResultsStore.getState().reset();
+              useCatStore.getState().reset();
+              usePreregisterStore.getState().reset();
+            }}
             startIcon={<DeleteIcon />}
             color="error"
             size="small"
@@ -130,9 +133,9 @@ export default function Admin() {
           }}
         >
           {[
-            { title: "eventStructure", data: readEventStructure() },
-            { title: "members", data: readMembers() },
-            { title: "results", data: readResults() },
+            { title: "eventStructure", data: eventStructure },
+            { title: "members", data: members },
+            { title: "results", data: results },
           ].map(({ title, data }) => (
             <Paper
               key={title}

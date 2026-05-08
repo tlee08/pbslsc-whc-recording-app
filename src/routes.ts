@@ -1,8 +1,8 @@
 import { index, route, type RouteConfig } from "@react-router/dev/routes";
 
 export default [
-  index("./pages/index.tsx"),
-  route("preregister", "./pages/preregister.tsx"),
-  route("results", "./pages/results.tsx"),
-  route("admin", "./pages/admin.tsx"),
+  index("./pages/Index.tsx"),
+  route("preregister", "./pages/Preregister.tsx"),
+  route("results", "./pages/Results.tsx"),
+  route("admin", "./pages/Admin.tsx"),
 ] satisfies RouteConfig;

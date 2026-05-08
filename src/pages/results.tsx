@@ -23,39 +23,32 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { useCatContext } from "../hooks/useCatContext";
-import { usePreregisterContext } from "../hooks/usePreregisterContext";
+import { useCatStore } from "../stores/catStore";
+import { useMembersStore } from "../stores/membersStore";
+import { usePreregisterStore } from "../stores/preregisterStore";
+import { useResultsStore } from "../stores/resultsStore";
 import type Member from "../models/Member";
 import type MemberShort from "../models/MemberShort";
-import { readMembers, readResults, writeResults } from "../utils/storageUtils";
 
 export default function Results() {
-  const { preregisterState, bulkAddPreregisterItems } = usePreregisterContext();
-  const { date, event, gender } = useCatContext();
+  const { preregisterState, bulkAddPreregisterItems } = usePreregisterStore();
+  const { date, event, gender } = useCatStore();
+  const members = useMembersStore((s) => s.members);
+  const results = useResultsStore((s) => s.results);
+  const setResultsForScope = useResultsStore((s) => s.setResultsForScope);
   const [preregisterCheckedState, setPreregisterCheckedState] =
     React.useState<boolean>(false);
-  const members = React.useMemo(() => readMembers(), []);
 
-  const [resultsState, setResultsState] = React.useState<MemberShort[]>(() => {
-    if (!date || !event || !gender) return [];
-    return readResults()?.[date]?.[event]?.[gender] ?? [];
-  });
-
-  React.useEffect(() => {
-    if (!date || !event || !gender) return;
-    setResultsState(readResults()?.[date]?.[event]?.[gender] ?? []);
-  }, [date, event, gender]);
-
-  React.useEffect(() => {
-    if (!date || !event || !gender) return;
-    writeResults(date, event, gender, resultsState);
-  }, [date, event, gender, resultsState]);
+  const scopeResults = React.useMemo(
+    () => results?.[date]?.[event]?.[gender] ?? [],
+    [results, date, event, gender],
+  );
 
   const availableMembers = React.useMemo(() => {
     const filteredMembers = members
       .filter((member) => member.gender === gender)
       .filter(
-        (member) => !resultsState.some((result) => result.id === member.id),
+        (member) => !scopeResults.some((result) => result.id === member.id),
       );
     return preregisterCheckedState
       ? filteredMembers.filter((i) =>
@@ -64,7 +57,7 @@ export default function Results() {
       : filteredMembers;
   }, [
     members,
-    resultsState,
+    scopeResults,
     gender,
     preregisterState,
     preregisterCheckedState,
@@ -72,21 +65,26 @@ export default function Results() {
 
   const addResult = (member: Member) => {
     const newResult: MemberShort = { id: member.id, title: member.title };
-    setResultsState([...resultsState, newResult]);
+    setResultsForScope(date, event, gender, [...scopeResults, newResult]);
   };
 
   const removeResult = (index: number) => {
-    setResultsState(resultsState.filter((_, i) => i !== index));
+    setResultsForScope(
+      date,
+      event,
+      gender,
+      scopeResults.filter((_, i) => i !== index),
+    );
   };
 
   const reorderResults: OnDragEndResponder = (result) => {
     if (!result.destination) return;
     const startIndex = result.source.index;
     const endIndex = result.destination.index;
-    const resultsTemp = [...resultsState];
-    const [removed] = resultsTemp.splice(startIndex, 1);
-    resultsTemp.splice(endIndex, 0, removed);
-    setResultsState(resultsTemp);
+    const items = [...scopeResults];
+    const [removed] = items.splice(startIndex, 1);
+    items.splice(endIndex, 0, removed);
+    setResultsForScope(date, event, gender, items);
   };
 
   return (
@@ -128,7 +126,7 @@ export default function Results() {
               getOptionLabel={(option) => option.title}
               renderInput={(params) => <TextField {...params} label="Member" />}
               onChange={(_, value) => {
-                if (value !== null) addResult(value);
+                if (value) addResult(value);
               }}
             />
             <Box
@@ -156,7 +154,7 @@ export default function Results() {
                 startIcon={<PersonAddIcon />}
                 onClick={() =>
                   bulkAddPreregisterItems(
-                    resultsState.map(
+                    scopeResults.map(
                       (i) => members.find((j) => j.title === i.title) || null,
                     ),
                   )
@@ -183,7 +181,7 @@ export default function Results() {
                     gap: { xs: 1, sm: 2 },
                   }}
                 >
-                  {resultsState.map((result, index) => (
+                  {scopeResults.map((result, index) => (
                     <Draggable
                       key={result.id}
                       index={index}

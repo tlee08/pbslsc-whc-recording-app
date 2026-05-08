@@ -1,31 +1,35 @@
-import { readEventStructure } from "./storageUtils";
+import type EventStructure from '../models/EventStructure'
 
-function getDatesOptions() {
-  return readEventStructure().dates.map((e) => ({
+function getDatesOptions(eventStructure: EventStructure) {
+  return eventStructure.dates.map((e) => ({
     label: e.label,
     value: e.value,
-  }));
+  }))
 }
-function getEventsOptions(dateValue: string) {
+function getEventsOptions(eventStructure: EventStructure, dateValue: string) {
   return (
-    readEventStructure()
-      .dates.find((e) => e.value === dateValue)
+    eventStructure.dates
+      .find((e) => e.value === dateValue)
       ?.events.map((e) => ({
         label: e.label,
         value: e.value,
       })) ?? []
-  );
+  )
 }
-function getGendersOptions(dateValue: string, eventValue: string) {
+function getGendersOptions(
+  eventStructure: EventStructure,
+  dateValue: string,
+  eventValue: string,
+) {
   return (
-    readEventStructure()
-      .dates.find((e) => e.value === dateValue)
+    eventStructure.dates
+      .find((e) => e.value === dateValue)
       ?.events.find((e) => e.value === eventValue)
       ?.genders.map((e) => ({
         label: e.label,
         value: e.value,
       })) ?? []
-  );
+  )
 }
 
-export { getDatesOptions, getEventsOptions, getGendersOptions };
+export { getDatesOptions, getEventsOptions, getGendersOptions }
