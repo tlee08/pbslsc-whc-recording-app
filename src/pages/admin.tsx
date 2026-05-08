@@ -3,13 +3,17 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { AppBar, Box, Button, Paper, Toolbar, Typography } from "@mui/material";
-import React from "react";
-import { downloadJson, uploadEventStructure, uploadMembers, uploadResults } from "../utils/storageUtils";
 import { useCatStore } from "../stores/catStore";
 import { useEventStructureStore } from "../stores/eventStructureStore";
 import { useMembersStore } from "../stores/membersStore";
 import { usePreregisterStore } from "../stores/preregisterStore";
 import { useResultsStore } from "../stores/resultsStore";
+import {
+  downloadJson,
+  uploadEventStructure,
+  uploadMembers,
+  uploadResults,
+} from "../utils/storageUtils";
 
 export default function Admin() {
   const eventStructure = useEventStructureStore((s) => s.eventStructure);

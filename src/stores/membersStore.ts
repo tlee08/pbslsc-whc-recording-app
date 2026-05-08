@@ -1,12 +1,12 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
-import type Member from '../models/Member'
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import type Member from "../models/Member";
 
 type MembersState = {
-  members: Member[]
-  setMembers: (data: Member[]) => void
-  reset: () => void
-}
+  members: Member[];
+  setMembers: (data: Member[]) => void;
+  reset: () => void;
+};
 
 export const useMembersStore = create<MembersState>()(
   persist(
@@ -16,8 +16,8 @@ export const useMembersStore = create<MembersState>()(
       reset: () => set({ members: [] }),
     }),
     {
-      name: 'members',
+      name: "members",
       storage: createJSONStorage(() => sessionStorage),
     },
   ),
-)
+);

@@ -1,19 +1,19 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
-import type MemberShort from '../models/MemberShort'
-import type ResultsStructure from '../models/ResultsStructure'
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import type MemberShort from "../models/MemberShort";
+import type ResultsStructure from "../models/ResultsStructure";
 
 type ResultsState = {
-  results: ResultsStructure
-  setResults: (data: ResultsStructure) => void
+  results: ResultsStructure;
+  setResults: (data: ResultsStructure) => void;
   setResultsForScope: (
     date: string,
     event: string,
     gender: string,
     items: MemberShort[],
-  ) => void
-  reset: () => void
-}
+  ) => void;
+  reset: () => void;
+};
 
 export const useResultsStore = create<ResultsState>()(
   persist(
@@ -36,8 +36,8 @@ export const useResultsStore = create<ResultsState>()(
       reset: () => set({ results: {} }),
     }),
     {
-      name: 'results',
+      name: "results",
       storage: createJSONStorage(() => sessionStorage),
     },
   ),
-)
+);

@@ -1,12 +1,12 @@
-import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
-import type EventStructure from '../models/EventStructure'
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
+import type EventStructure from "../models/EventStructure";
 
 type EventStructureState = {
-  eventStructure: EventStructure
-  setEventStructure: (data: EventStructure) => void
-  reset: () => void
-}
+  eventStructure: EventStructure;
+  setEventStructure: (data: EventStructure) => void;
+  reset: () => void;
+};
 
 export const useEventStructureStore = create<EventStructureState>()(
   persist(
@@ -16,8 +16,8 @@ export const useEventStructureStore = create<EventStructureState>()(
       reset: () => set({ eventStructure: { dates: [] } }),
     }),
     {
-      name: 'eventStructure',
+      name: "eventStructure",
       storage: createJSONStorage(() => sessionStorage),
     },
   ),
-)
+);

@@ -1,10 +1,10 @@
-import type EventStructure from '../models/EventStructure'
+import type EventStructure from "../models/EventStructure";
 
 function getDatesOptions(eventStructure: EventStructure) {
   return eventStructure.dates.map((e) => ({
     label: e.label,
     value: e.value,
-  }))
+  }));
 }
 function getEventsOptions(eventStructure: EventStructure, dateValue: string) {
   return (
@@ -14,7 +14,7 @@ function getEventsOptions(eventStructure: EventStructure, dateValue: string) {
         label: e.label,
         value: e.value,
       })) ?? []
-  )
+  );
 }
 function getGendersOptions(
   eventStructure: EventStructure,
@@ -29,7 +29,7 @@ function getGendersOptions(
         label: e.label,
         value: e.value,
       })) ?? []
-  )
+  );
 }
 
-export { getDatesOptions, getEventsOptions, getGendersOptions }
+export { getDatesOptions, getEventsOptions, getGendersOptions };
