@@ -26,6 +26,8 @@ jobs:
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-      - run: pnpm run deploy
+      - run: |
+          git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          pnpm run deploy
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
