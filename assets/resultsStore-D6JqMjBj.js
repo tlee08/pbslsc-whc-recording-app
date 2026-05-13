@@ -1,0 +1,1 @@
+import{z as o,A as a,C as S}from"./catStore-C5DOAsDe.js";const p=o()(a(e=>({results:{},setResults:s=>e({results:s}),setResultsForScope:(s,t,u,l)=>e(r=>({results:{...r.results,[s]:{...r.results[s],[t]:{...r.results[s]?.[t]??{},[u]:l}}}})),reset:()=>e({results:{}})}),{name:"results",storage:S(()=>sessionStorage)}));export{p as u};
