@@ -1,4 +1,14 @@
-import { ActionIcon, Autocomplete, Button, Card, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Autocomplete,
+  Button,
+  Card,
+  Group,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconTrash, IconUserPlus, IconX } from "@tabler/icons-react";
 import React from "react";
@@ -48,7 +58,10 @@ export default function Preregister() {
   return (
     <Stack>
       <Title order={2}>
-        <IconUserPlus size={28} style={{ verticalAlign: "middle", marginRight: 4 }} />
+        <IconUserPlus
+          size={28}
+          style={{ verticalAlign: "middle", marginRight: 4 }}
+        />
         Preregister
       </Title>
 
@@ -65,11 +78,16 @@ export default function Preregister() {
             <Group>
               <Autocomplete
                 style={{ flex: 1, minWidth: 0 }}
-                data={availableMembers.map((m) => ({ value: m.title, label: m.title }))}
+                data={availableMembers.map((m) => ({
+                  value: m.title,
+                  label: m.title,
+                }))}
                 placeholder="Member"
                 onChange={(_value, option) => {
                   if (option) {
-                    const member = availableMembers.find((m) => m.title === option.value);
+                    const member = availableMembers.find(
+                      (m) => m.title === option.value,
+                    );
                     if (member) addPreregisterItem(member);
                   }
                 }}

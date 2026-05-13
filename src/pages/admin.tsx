@@ -1,5 +1,21 @@
-import { Box, Button, Code, FileButton, Group, Paper, ScrollArea, Stack, Text, Title } from "@mantine/core";
-import { IconDownload, IconSettings, IconTrash, IconUpload } from "@tabler/icons-react";
+import {
+  Box,
+  Button,
+  Code,
+  FileButton,
+  Group,
+  Paper,
+  ScrollArea,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import {
+  IconDownload,
+  IconSettings,
+  IconTrash,
+  IconUpload,
+} from "@tabler/icons-react";
 import { useCatStore } from "../stores/catStore";
 import { useEventStructureStore } from "../stores/eventStructureStore";
 import { useMembersStore } from "../stores/membersStore";
@@ -20,7 +36,10 @@ export default function Admin() {
   return (
     <Stack>
       <Title order={2}>
-        <IconSettings size={28} style={{ verticalAlign: "middle", marginRight: 4 }} />
+        <IconSettings
+          size={28}
+          style={{ verticalAlign: "middle", marginRight: 4 }}
+        />
         Admin
       </Title>
 
@@ -29,21 +48,33 @@ export default function Admin() {
           <Group gap={{ base: 4, sm: 8 }} justify="center">
             <FileButton onChange={uploadEventStructure} accept=".json">
               {(props) => (
-                <Button {...props} leftSection={<IconUpload size={16} />} size="sm">
+                <Button
+                  {...props}
+                  leftSection={<IconUpload size={16} />}
+                  size="sm"
+                >
                   Upload eventStructure
                 </Button>
               )}
             </FileButton>
             <FileButton onChange={uploadMembers} accept=".json">
               {(props) => (
-                <Button {...props} leftSection={<IconUpload size={16} />} size="sm">
+                <Button
+                  {...props}
+                  leftSection={<IconUpload size={16} />}
+                  size="sm"
+                >
                   Upload members
                 </Button>
               )}
             </FileButton>
             <FileButton onChange={uploadResults} accept=".json">
               {(props) => (
-                <Button {...props} leftSection={<IconUpload size={16} />} size="sm">
+                <Button
+                  {...props}
+                  leftSection={<IconUpload size={16} />}
+                  size="sm"
+                >
                   Upload Results
                 </Button>
               )}
