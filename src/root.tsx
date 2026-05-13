@@ -25,7 +25,12 @@ import {
 import CatDropdownSet from "./components/shared/CatDropdownSet";
 import { useErrorStore } from "./stores/errorStore";
 
-const NAV_ITEMS = ["Preregister", "Results", "Admin"];
+const NAV_ITEMS = [
+  { label: "Home", to: "/" },
+  { label: "Preregister", to: "/preregister" },
+  { label: "Results", to: "/results" },
+  { label: "Admin", to: "/admin" },
+];
 
 function ErrorNotifications() {
   const errors = useErrorStore((s) => s.errors);
@@ -100,10 +105,10 @@ export function Layout({ children }: { children: ReactNode }) {
                 <Divider />
                 {NAV_ITEMS.map((item) => (
                   <NavLink
-                    key={item}
+                    key={item.label}
                     component={Link}
-                    to={`/${item}`}
-                    label={item}
+                    to={item.to}
+                    label={item.label}
                     onClick={close}
                   />
                 ))}
