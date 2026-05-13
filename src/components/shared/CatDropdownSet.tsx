@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Stack } from "@mantine/core";
 import { useCatStore } from "../../stores/catStore";
 import { useEventStructureStore } from "../../stores/eventStructureStore";
 import {
@@ -17,15 +17,7 @@ export default function CatDropdownSet() {
   const gendersOptions = getGendersOptions(eventStructure, date, event);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flex: 1,
-        flexDirection: "column",
-        gap: { xs: 1.5, sm: 2 },
-        p: { xs: 1.5, sm: 2 },
-      }}
-    >
+    <Stack gap={{ base: 6, sm: 8 }} p={{ base: 6, sm: 8 }}>
       <CatDropdown
         title="Date"
         data={datesOptions}
@@ -47,6 +39,6 @@ export default function CatDropdownSet() {
         setValue={setGender}
         disabled={event === ""}
       />
-    </Box>
+    </Stack>
   );
 }

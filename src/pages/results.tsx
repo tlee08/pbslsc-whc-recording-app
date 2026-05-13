@@ -4,24 +4,8 @@ import {
   Droppable,
   type OnDragEndResponder,
 } from "@hello-pangea/dnd";
-import { Delete as DeleteIcon } from "@mui/icons-material";
-import ListIcon from "@mui/icons-material/List";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import {
-  AppBar,
-  Autocomplete,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  FormControlLabel,
-  IconButton,
-  Paper,
-  Switch,
-  TextField,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { ActionIcon, Autocomplete, Button, Card, Group, Paper, Stack, Switch, Text, Title } from "@mantine/core";
+import { IconList, IconTrash, IconUserPlus } from "@tabler/icons-react";
 import React from "react";
 import { useCatStore } from "../stores/catStore";
 import { useMembersStore } from "../stores/membersStore";
@@ -88,82 +72,57 @@ export default function Results() {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography sx={{ fontSize: { xs: "1.25rem", sm: "2rem" } }}>
-            <ListIcon /> Results
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <Stack>
+      <Title order={2}>
+        <IconList size={28} style={{ verticalAlign: "middle", marginRight: 4 }} />
+        Results
+      </Title>
 
       {date && event && gender ? (
-        <Box
-          sx={{
-            display: "flex",
-            flex: 1,
-            flexDirection: "column",
-            p: { xs: 1, sm: 2 },
-            gap: { xs: 1, sm: 2 },
-          }}
-        >
+        <Stack gap={{ base: 4, sm: 8 }} p={{ base: 4, sm: 8 }}>
           <Paper
-            elevation={3}
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              flexWrap: "wrap",
-              p: { xs: 1, sm: 2 },
-              gap: { xs: 1, sm: 2 },
-              position: { xs: "static", sm: "sticky" },
-              top: { sm: 8 },
-              zIndex: 100,
-            }}
+            shadow="md"
+            withBorder
+            p={{ base: 6, sm: 8 }}
+            pos={{ base: "static", sm: "sticky" }}
+            top={{ sm: 8 }}
+            style={{ zIndex: 100 }}
           >
-            <Autocomplete
-              sx={{ display: "flex", flex: 1, minWidth: 0 }}
-              options={availableMembers}
-              getOptionLabel={(option) => option.title}
-              renderInput={(params) => <TextField {...params} label="Member" />}
-              onChange={(_, value) => {
-                if (value) addResult(value);
-              }}
-            />
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
-                gap: 1,
-                alignItems: { sm: "center" },
-              }}
-            >
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={preregisterCheckedState}
-                    onChange={(e) =>
-                      setPreregisterCheckedState(e.target.checked)
-                    }
-                  />
-                }
-                label={<Typography variant="body2">Preregistered</Typography>}
-                sx={{ mr: { sm: 1 } }}
+            <Group align="flex-end">
+              <Autocomplete
+                style={{ flex: 1, minWidth: 0 }}
+                data={availableMembers.map((m) => ({ value: m.title, label: m.title }))}
+                placeholder="Member"
+                onChange={(_value, option) => {
+                  if (option) {
+                    const member = availableMembers.find((m) => m.title === option.value);
+                    if (member) addResult(member);
+                  }
+                }}
               />
-              <Button
-                variant="contained"
-                startIcon={<PersonAddIcon />}
-                onClick={() =>
-                  bulkAddPreregisterItems(
-                    scopeResults.map(
-                      (i) => members.find((j) => j.title === i.title) || null,
-                    ),
-                  )
-                }
-                size="small"
-              >
-                Add to Preregister
-              </Button>
-            </Box>
+              <Group>
+                <Switch
+                  label="Preregistered"
+                  checked={preregisterCheckedState}
+                  onChange={(e) =>
+                    setPreregisterCheckedState(e.currentTarget.checked)
+                  }
+                />
+                <Button
+                  leftSection={<IconUserPlus size={16} />}
+                  onClick={() =>
+                    bulkAddPreregisterItems(
+                      scopeResults.map(
+                        (i) => members.find((j) => j.title === i.title) || null,
+                      ),
+                    )
+                  }
+                  size="sm"
+                >
+                  Add to Preregister
+                </Button>
+              </Group>
+            </Group>
           </Paper>
 
           <DragDropContext onDragEnd={reorderResults}>
@@ -172,70 +131,52 @@ export default function Results() {
                 <Paper
                   ref={provided.innerRef}
                   {...provided.droppableProps}
-                  elevation={3}
-                  sx={{
-                    display: "flex",
-                    flex: 1,
-                    flexDirection: "column",
-                    p: { xs: 1, sm: 2 },
-                    gap: { xs: 1, sm: 2 },
-                  }}
+                  shadow="md"
+                  withBorder
+                  p={{ base: 6, sm: 8 }}
                 >
-                  {scopeResults.map((result, index) => (
-                    <Draggable
-                      key={result.id}
-                      index={index}
-                      draggableId={`${result.id}_id`}
-                    >
-                      {(provided) => (
-                        <Card
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          variant="outlined"
-                          sx={{ display: "flex", flex: 1 }}
-                        >
-                          <CardContent
-                            sx={{
-                              display: "flex",
-                              flex: 1,
-                              flexDirection: "row",
-                              alignItems: "center",
-                              py: { xs: 1, sm: 2 },
-                              "&:last-child": { pb: { xs: 1, sm: 2 } },
-                            }}
+                  <Stack gap={{ base: 4, sm: 8 }}>
+                    {scopeResults.map((result, index) => (
+                      <Draggable
+                        key={result.id}
+                        index={index}
+                        draggableId={`${result.id}_id`}
+                      >
+                        {(provided) => (
+                          <Card
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            withBorder
                           >
-                            <Typography
-                              variant="body1"
-                              sx={{
-                                display: "flex",
-                                flex: 1,
-                                fontSize: { xs: "0.875rem", sm: "1rem" },
-                              }}
-                            >
-                              {`${index + 1}. ${result.title}`}
-                            </Typography>
-                            <IconButton onClick={() => removeResult(index)}>
-                              <DeleteIcon />
-                            </IconButton>
-                          </CardContent>
-                        </Card>
-                      )}
-                    </Draggable>
-                  ))}
-                  {provided.placeholder}
+                            <Group justify="space-between" wrap="nowrap" py={4}>
+                              <Text fz={{ base: "sm", sm: "md" }}>
+                                {`${index + 1}. ${result.title}`}
+                              </Text>
+                              <ActionIcon
+                                variant="subtle"
+                                color="gray"
+                                onClick={() => removeResult(index)}
+                              >
+                                <IconTrash size={20} />
+                              </ActionIcon>
+                            </Group>
+                          </Card>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </Stack>
                 </Paper>
               )}
             </Droppable>
           </DragDropContext>
-        </Box>
+        </Stack>
       ) : (
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h6" color="text.secondary" textAlign="center">
-            Please select the date, event, and gender
-          </Typography>
-        </Box>
+        <Text c="dimmed" ta="center" size="xl" p="xl">
+          Please select the date, event, and gender
+        </Text>
       )}
-    </Box>
+    </Stack>
   );
 }

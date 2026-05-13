@@ -1,25 +1,15 @@
-import { Box } from "@mui/material";
-import CssBaseline from "@mui/material/CssBaseline";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React from "react";
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
-import { NavDrawer, DRAWER_WIDTH } from "./components/shared/NavDrawer";
-import { DrawerContext } from "./contexts/DrawerContext";
+import "@mantine/core/styles.css";
+import { AppShell, Burger, Divider, Group, MantineProvider, NavLink, Title } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { ModalsProvider } from "@mantine/modals";
+import type { ReactNode } from "react";
+import { Link, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import CatDropdownSet from "./components/shared/CatDropdownSet";
 
-const theme = createTheme({
-  components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#1976d2",
-        },
-      },
-    },
-  },
-});
+const NAV_ITEMS = ["Preregister", "Results", "Admin"];
 
-export function Layout({ children }: { children: React.ReactNode }) {
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+export function Layout({ children }: { children: ReactNode }) {
+  const [opened, { toggle, close }] = useDisclosure();
 
   return (
     <html lang="en">
@@ -30,21 +20,38 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <DrawerContext.Provider value={{ mobileOpen, setMobileOpen }}>
-            <NavDrawer />
-          </DrawerContext.Provider>
-          <Box
-            component="main"
-            sx={{
-              width: { xs: "100%", sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-              ml: { xs: 0, sm: `${DRAWER_WIDTH}px` },
-            }}
+        <MantineProvider>
+          <ModalsProvider>
+          <AppShell
+            header={{ height: 60 }}
+            navbar={{ width: 240, breakpoint: "sm", collapsed: { mobile: !opened } }}
+            padding={{ base: "xs", sm: "md" }}
           >
-            {children}
-          </Box>
-        </ThemeProvider>
+            <AppShell.Header>
+              <Group h="100%" px="md">
+                <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+                <Title order={4}>WHC Race Scorer</Title>
+              </Group>
+            </AppShell.Header>
+
+            <AppShell.Navbar>
+              <CatDropdownSet />
+              <Divider />
+              {NAV_ITEMS.map((item) => (
+                <NavLink
+                  key={item}
+                  component={Link}
+                  to={`/${item}`}
+                  label={item}
+                  onClick={close}
+                />
+              ))}
+            </AppShell.Navbar>
+
+            <AppShell.Main>{children}</AppShell.Main>
+          </AppShell>
+          </ModalsProvider>
+        </MantineProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

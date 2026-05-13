@@ -1,8 +1,5 @@
-import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import DeleteIcon from "@mui/icons-material/Delete";
-import SettingsIcon from "@mui/icons-material/Settings";
-import { AppBar, Box, Button, Paper, Toolbar, Typography } from "@mui/material";
+import { Box, Button, Code, FileButton, Group, Paper, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { IconDownload, IconSettings, IconTrash, IconUpload } from "@tabler/icons-react";
 import { useCatStore } from "../stores/catStore";
 import { useEventStructureStore } from "../stores/eventStructureStore";
 import { useMembersStore } from "../stores/membersStore";
@@ -21,162 +18,84 @@ export default function Admin() {
   const results = useResultsStore((s) => s.results);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography sx={{ fontSize: { xs: "1.25rem", sm: "2rem" } }}>
-            <SettingsIcon /> Admin
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <Stack>
+      <Title order={2}>
+        <IconSettings size={28} style={{ verticalAlign: "middle", marginRight: 4 }} />
+        Admin
+      </Title>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          p: { xs: 1, sm: 2 },
-          gap: { xs: 1, sm: 2 },
-        }}
-      >
-        <Paper
-          elevation={3}
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            flexWrap: "wrap",
-            p: { xs: 1, sm: 2 },
-            gap: { xs: 1, sm: 2 },
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            component="label"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            size="small"
-          >
-            Upload eventStructure
-            <input
-              type="file"
-              onChange={uploadEventStructure}
-              style={{ clip: "rect(0 0 0 0)", width: 1 }}
-            />
-          </Button>
-          <Button
-            component="label"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            size="small"
-          >
-            Upload members
-            <input
-              type="file"
-              onChange={uploadMembers}
-              style={{ clip: "rect(0 0 0 0)", width: 1 }}
-            />
-          </Button>
-          <Button
-            component="label"
-            variant="contained"
-            startIcon={<CloudUploadIcon />}
-            size="small"
-          >
-            Upload Results
-            <input
-              type="file"
-              onChange={uploadResults}
-              style={{ clip: "rect(0 0 0 0)", width: 1 }}
-            />
-          </Button>
+      <Stack gap={{ base: 4, sm: 8 }} p={{ base: 4, sm: 8 }}>
+        <Paper shadow="md" withBorder p={{ base: 6, sm: 8 }}>
+          <Group gap={{ base: 4, sm: 8 }} justify="center">
+            <FileButton onChange={uploadEventStructure} accept=".json">
+              {(props) => (
+                <Button {...props} leftSection={<IconUpload size={16} />} size="sm">
+                  Upload eventStructure
+                </Button>
+              )}
+            </FileButton>
+            <FileButton onChange={uploadMembers} accept=".json">
+              {(props) => (
+                <Button {...props} leftSection={<IconUpload size={16} />} size="sm">
+                  Upload members
+                </Button>
+              )}
+            </FileButton>
+            <FileButton onChange={uploadResults} accept=".json">
+              {(props) => (
+                <Button {...props} leftSection={<IconUpload size={16} />} size="sm">
+                  Upload Results
+                </Button>
+              )}
+            </FileButton>
+          </Group>
         </Paper>
 
-        <Paper
-          elevation={3}
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            flexWrap: "wrap",
-            p: { xs: 1, sm: 2 },
-            gap: { xs: 1, sm: 2 },
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            variant="contained"
-            startIcon={<CloudDownloadIcon />}
-            onClick={() => downloadJson(results, "whc_results.json")}
-            fullWidth={false}
-            size="small"
-          >
-            Download Results
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => {
-              useEventStructureStore.getState().reset();
-              useMembersStore.getState().reset();
-              useResultsStore.getState().reset();
-              useCatStore.getState().reset();
-              usePreregisterStore.getState().reset();
-            }}
-            startIcon={<DeleteIcon />}
-            color="error"
-            size="small"
-          >
-            Clear All Data
-          </Button>
+        <Paper shadow="md" withBorder p={{ base: 6, sm: 8 }}>
+          <Group gap={{ base: 4, sm: 8 }} justify="center">
+            <Button
+              leftSection={<IconDownload size={16} />}
+              onClick={() => downloadJson(results, "whc_results.json")}
+              size="sm"
+            >
+              Download Results
+            </Button>
+            <Button
+              color="red"
+              leftSection={<IconTrash size={16} />}
+              onClick={() => {
+                useEventStructureStore.getState().reset();
+                useMembersStore.getState().reset();
+                useResultsStore.getState().reset();
+                useCatStore.getState().reset();
+                usePreregisterStore.getState().reset();
+              }}
+              size="sm"
+            >
+              Clear All Data
+            </Button>
+          </Group>
         </Paper>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            gap: { xs: 1, sm: 2 },
-          }}
-        >
+        <Group grow align="flex-start" gap={{ base: 4, sm: 8 }} wrap="wrap">
           {[
             { title: "eventStructure", data: eventStructure },
             { title: "members", data: members },
             { title: "results", data: results },
           ].map(({ title, data }) => (
-            <Paper
-              key={title}
-              elevation={3}
-              sx={{
-                p: { xs: 1, sm: 2 },
-                flex: 1,
-                minWidth: 0,
-              }}
-            >
-              <Typography variant="subtitle1" fontWeight="bold">
+            <Paper key={title} shadow="md" withBorder p={{ base: 6, sm: 8 }}>
+              <Text fw={700} mb="xs">
                 {title}
-              </Typography>
-              <Box
-                sx={{
-                  maxHeight: { xs: "200px", sm: "400px" },
-                  overflow: "auto",
-                  backgroundColor: "grey.100",
-                  p: 0.5,
-                  borderRadius: 1,
-                }}
-              >
-                <Typography
-                  component="pre"
-                  sx={{
-                    margin: 0,
-                    fontSize: { xs: "0.625rem", sm: "0.75rem" },
-                    wordBreak: "break-all",
-                  }}
-                >
+              </Text>
+              <ScrollArea h={{ base: 200, sm: 400 }} bg="gray.0" p={2}>
+                <Code block style={{ wordBreak: "break-all" }}>
                   {JSON.stringify(data, null, 2)}
-                </Typography>
-              </Box>
+                </Code>
+              </ScrollArea>
             </Paper>
           ))}
-        </Box>
-      </Box>
-    </Box>
+        </Group>
+      </Stack>
+    </Stack>
   );
 }

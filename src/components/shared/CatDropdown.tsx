@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { Select } from "@mantine/core";
 
 interface CatItem {
   label: string;
@@ -21,21 +21,12 @@ export default function CatDropdown({
   disabled,
 }: CatDropdownProps) {
   return (
-    <FormControl fullWidth variant="outlined">
-      <InputLabel id={`${title.toLowerCase()}-label`}>{title}</InputLabel>
-      <Select
-        labelId={`${title.toLowerCase()}-label`}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        label={title}
-        disabled={disabled}
-      >
-        {data.map((item) => (
-          <MenuItem key={item.value} value={item.value}>
-            {item.label}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Select
+      label={title}
+      data={data}
+      value={value || null}
+      onChange={(val) => setValue(val ?? "")}
+      disabled={disabled}
+    />
   );
 }

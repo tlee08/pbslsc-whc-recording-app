@@ -1,24 +1,6 @@
-import ClearIcon from "@mui/icons-material/Clear";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import {
-  AppBar,
-  Autocomplete,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  Paper,
-  TextField,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import { ActionIcon, Autocomplete, Button, Card, Group, Paper, Stack, Text, Title } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import { IconTrash, IconUserPlus, IconX } from "@tabler/icons-react";
 import React from "react";
 import { useCatStore } from "../stores/catStore";
 import { useMembersStore } from "../stores/membersStore";
@@ -33,7 +15,6 @@ export default function Preregister() {
     removePreregisterItem,
   } = usePreregisterStore();
   const members = useMembersStore((s) => s.members);
-  const [clearDialogOpen, setClearDialogOpen] = React.useState(false);
 
   const filteredPreregisterState = React.useMemo(
     () => preregisterState.filter((member) => member.gender === genderState),
@@ -50,135 +31,85 @@ export default function Preregister() {
     [members, genderState, preregisterState],
   );
 
+  const openClearConfirm = () =>
+    modals.openConfirmModal({
+      title: "Clear Preregistered List",
+      children: (
+        <Text size="sm">
+          This will clear the preregistered list for both genders. Are you sure
+          you want to continue?
+        </Text>
+      ),
+      labels: { confirm: "Clear All", cancel: "Cancel" },
+      confirmProps: { color: "red" },
+      onConfirm: () => setPreregisterState([]),
+    });
+
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography sx={{ fontSize: { xs: "1.25rem", sm: "2rem" } }}>
-            <PersonAddIcon /> Preregister
-          </Typography>
-        </Toolbar>
-      </AppBar>
+    <Stack>
+      <Title order={2}>
+        <IconUserPlus size={28} style={{ verticalAlign: "middle", marginRight: 4 }} />
+        Preregister
+      </Title>
 
       {genderState ? (
-        <Box
-          sx={{
-            display: "flex",
-            flex: 1,
-            flexDirection: "column",
-            p: { xs: 1, sm: 2 },
-            gap: { xs: 1, sm: 2 },
-          }}
-        >
+        <Stack gap={{ base: 4, sm: 8 }} p={{ base: 4, sm: 8 }}>
           <Paper
-            elevation={3}
-            sx={{
-              display: "flex",
-              flexDirection: { xs: "column", sm: "row" },
-              p: { xs: 1, sm: 2 },
-              gap: { xs: 1, sm: 2 },
-              position: { xs: "static", sm: "sticky" },
-              top: { sm: 8 },
-              zIndex: 100,
-            }}
+            shadow="md"
+            withBorder
+            p={{ base: 6, sm: 8 }}
+            pos={{ base: "static", sm: "sticky" }}
+            top={{ sm: 8 }}
+            style={{ zIndex: 100 }}
           >
-            <Autocomplete
-              sx={{ display: "flex", flex: 1, minWidth: 0 }}
-              options={availableMembers}
-              getOptionLabel={(option) => option.title}
-              renderInput={(params) => <TextField {...params} label="Member" />}
-              onChange={(_, value) => {
-                if (value) {
-                  addPreregisterItem(value);
-                }
-              }}
-            />
-            <Button
-              variant="contained"
-              startIcon={<ClearIcon />}
-              onClick={() => setClearDialogOpen(true)}
-              sx={{ whiteSpace: "nowrap" }}
-            >
-              Clear
-            </Button>
-          </Paper>
-
-          <Paper
-            elevation={3}
-            sx={{
-              display: "flex",
-              flex: 1,
-              flexDirection: "column",
-              p: { xs: 1, sm: 2 },
-              gap: { xs: 1, sm: 2 },
-            }}
-          >
-            {filteredPreregisterState.map((member, index) => (
-              <Card key={member.id} variant="outlined">
-                <CardContent
-                  sx={{
-                    display: "flex",
-                    flex: 1,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    py: { xs: 1, sm: 2 },
-                    "&:last-child": { pb: { xs: 1, sm: 2 } },
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      display: "flex",
-                      flex: 1,
-                      fontSize: { xs: "0.875rem", sm: "1rem" },
-                    }}
-                  >
-                    {member.title}
-                  </Typography>
-                  <IconButton
-                    edge="end"
-                    onClick={() => removePreregisterItem(index)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </CardContent>
-              </Card>
-            ))}
-          </Paper>
-
-          <Dialog
-            open={clearDialogOpen}
-            onClose={() => setClearDialogOpen(false)}
-          >
-            <DialogTitle>Clear Preregistered List</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                This will clear the preregistered list for both genders. Are you
-                sure you want to continue?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => setClearDialogOpen(false)}>Cancel</Button>
-              <Button
-                onClick={() => {
-                  setPreregisterState([]);
-                  setClearDialogOpen(false);
+            <Group>
+              <Autocomplete
+                style={{ flex: 1, minWidth: 0 }}
+                data={availableMembers.map((m) => ({ value: m.title, label: m.title }))}
+                placeholder="Member"
+                onChange={(_value, option) => {
+                  if (option) {
+                    const member = availableMembers.find((m) => m.title === option.value);
+                    if (member) addPreregisterItem(member);
+                  }
                 }}
-                variant="contained"
-                color="error"
+              />
+              <Button
+                leftSection={<IconX size={16} />}
+                onClick={openClearConfirm}
+                style={{ whiteSpace: "nowrap" }}
               >
-                Clear All
+                Clear
               </Button>
-            </DialogActions>
-          </Dialog>
-        </Box>
+            </Group>
+          </Paper>
+
+          <Paper shadow="md" withBorder p={{ base: 6, sm: 8 }}>
+            <Stack gap={{ base: 4, sm: 8 }}>
+              {filteredPreregisterState.map((member, index) => (
+                <Card key={member.id} withBorder>
+                  <Group justify="space-between" wrap="nowrap" py={4}>
+                    <Text fz={{ base: "sm", sm: "md" }} style={{ flex: 1 }}>
+                      {member.title}
+                    </Text>
+                    <ActionIcon
+                      variant="subtle"
+                      color="gray"
+                      onClick={() => removePreregisterItem(index)}
+                    >
+                      <IconTrash size={20} />
+                    </ActionIcon>
+                  </Group>
+                </Card>
+              ))}
+            </Stack>
+          </Paper>
+        </Stack>
       ) : (
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h6" color="text.secondary" textAlign="center">
-            Please select the gender
-          </Typography>
-        </Box>
+        <Text c="dimmed" ta="center" size="xl" p="xl">
+          Please select the gender
+        </Text>
       )}
-    </Box>
+    </Stack>
   );
 }
