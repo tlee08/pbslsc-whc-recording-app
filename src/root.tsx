@@ -1,12 +1,63 @@
+import {
+  AppShell,
+  Burger,
+  Divider,
+  Group,
+  MantineProvider,
+  NavLink,
+  Notification,
+  Stack,
+  Title,
+} from "@mantine/core";
 import "@mantine/core/styles.css";
-import { AppShell, Burger, Divider, Group, MantineProvider, NavLink, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ModalsProvider } from "@mantine/modals";
 import type { ReactNode } from "react";
-import { Link, Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import {
+  Link,
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useRouteError,
+} from "react-router";
 import CatDropdownSet from "./components/shared/CatDropdownSet";
+import { useErrorStore } from "./stores/errorStore";
 
 const NAV_ITEMS = ["Preregister", "Results", "Admin"];
+
+function ErrorNotifications() {
+  const errors = useErrorStore((s) => s.errors);
+  const dismiss = useErrorStore((s) => s.dismissError);
+
+  if (errors.length === 0) return null;
+
+  return (
+    <Stack
+      style={{
+        position: "fixed",
+        top: 12,
+        right: 12,
+        zIndex: 9999,
+        maxWidth: 360,
+      }}
+      gap="xs"
+    >
+      {errors.map((err) => (
+        <Notification
+          key={err.id}
+          color="red"
+          title={err.title}
+          withCloseButton
+          onClose={() => dismiss(err.id)}
+        >
+          {err.message}
+        </Notification>
+      ))}
+    </Stack>
+  );
+}
 
 export function Layout({ children }: { children: ReactNode }) {
   const [opened, { toggle, close }] = useDisclosure();
@@ -22,34 +73,44 @@ export function Layout({ children }: { children: ReactNode }) {
       <body>
         <MantineProvider>
           <ModalsProvider>
-          <AppShell
-            header={{ height: 60 }}
-            navbar={{ width: 240, breakpoint: "sm", collapsed: { mobile: !opened } }}
-            padding={{ base: "xs", sm: "md" }}
-          >
-            <AppShell.Header>
-              <Group h="100%" px="md">
-                <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-                <Title order={4}>WHC Race Scorer</Title>
-              </Group>
-            </AppShell.Header>
+            <ErrorNotifications />
+            <AppShell
+              header={{ height: 60 }}
+              navbar={{
+                width: 240,
+                breakpoint: "sm",
+                collapsed: { mobile: !opened },
+              }}
+              padding={{ base: "xs", sm: "md" }}
+            >
+              <AppShell.Header>
+                <Group h="100%" px="md">
+                  <Burger
+                    opened={opened}
+                    onClick={toggle}
+                    hiddenFrom="sm"
+                    size="sm"
+                  />
+                  <Title order={4}>WHC Race Scorer</Title>
+                </Group>
+              </AppShell.Header>
 
-            <AppShell.Navbar>
-              <CatDropdownSet />
-              <Divider />
-              {NAV_ITEMS.map((item) => (
-                <NavLink
-                  key={item}
-                  component={Link}
-                  to={`/${item}`}
-                  label={item}
-                  onClick={close}
-                />
-              ))}
-            </AppShell.Navbar>
+              <AppShell.Navbar>
+                <CatDropdownSet />
+                <Divider />
+                {NAV_ITEMS.map((item) => (
+                  <NavLink
+                    key={item}
+                    component={Link}
+                    to={`/${item}`}
+                    label={item}
+                    onClick={close}
+                  />
+                ))}
+              </AppShell.Navbar>
 
-            <AppShell.Main>{children}</AppShell.Main>
-          </AppShell>
+              <AppShell.Main>{children}</AppShell.Main>
+            </AppShell>
           </ModalsProvider>
         </MantineProvider>
         <ScrollRestoration />
@@ -64,5 +125,17 @@ export default function App() {
 }
 
 export function ErrorBoundary() {
-  return <div>Error</div>;
+  const error = useRouteError();
+  const message =
+    error instanceof Error ? error.message : "An unexpected error occurred";
+
+  return (
+    <Notification
+      color="red"
+      title="Something went wrong"
+      withCloseButton={false}
+    >
+      {message}
+    </Notification>
+  );
 }

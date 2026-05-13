@@ -4,15 +4,26 @@ import {
   Droppable,
   type OnDragEndResponder,
 } from "@hello-pangea/dnd";
-import { ActionIcon, Autocomplete, Button, Card, Group, Paper, Stack, Switch, Text, Title } from "@mantine/core";
+import {
+  ActionIcon,
+  Autocomplete,
+  Button,
+  Card,
+  Group,
+  Paper,
+  Stack,
+  Switch,
+  Text,
+  Title,
+} from "@mantine/core";
 import { IconList, IconTrash, IconUserPlus } from "@tabler/icons-react";
 import React from "react";
+import type Member from "../models/Member";
+import type MemberShort from "../models/MemberShort";
 import { useCatStore } from "../stores/catStore";
 import { useMembersStore } from "../stores/membersStore";
 import { usePreregisterStore } from "../stores/preregisterStore";
 import { useResultsStore } from "../stores/resultsStore";
-import type Member from "../models/Member";
-import type MemberShort from "../models/MemberShort";
 
 export default function Results() {
   const { preregisterState, bulkAddPreregisterItems } = usePreregisterStore();
@@ -74,7 +85,10 @@ export default function Results() {
   return (
     <Stack>
       <Title order={2}>
-        <IconList size={28} style={{ verticalAlign: "middle", marginRight: 4 }} />
+        <IconList
+          size={28}
+          style={{ verticalAlign: "middle", marginRight: 4 }}
+        />
         Results
       </Title>
 
@@ -85,19 +99,22 @@ export default function Results() {
             withBorder
             p={{ base: 6, sm: 8 }}
             pos={{ base: "static", sm: "sticky" }}
-            top={{ sm: 8 }}
+            top={{ sm: "calc(var(--app-shell-header-height) + 8px)" }}
             style={{ zIndex: 100 }}
           >
             <Group align="flex-end">
               <Autocomplete
                 style={{ flex: 1, minWidth: 0 }}
-                data={availableMembers.map((m) => ({ value: m.title, label: m.title }))}
+                data={availableMembers.map((m) => ({
+                  value: m.title,
+                  label: m.title,
+                }))}
                 placeholder="Member"
-                onChange={(_value, option) => {
-                  if (option) {
-                    const member = availableMembers.find((m) => m.title === option.value);
-                    if (member) addResult(member);
-                  }
+                onOptionSubmit={(value) => {
+                  const member = availableMembers.find(
+                    (m) => m.title === value,
+                  );
+                  if (member) addResult(member);
                 }}
               />
               <Group>

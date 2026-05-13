@@ -1,40 +1,55 @@
+import { z } from "zod";
+import { eventStructureSchema } from "../models/EventStructure";
+import { memberSchema } from "../models/Member";
+import { resultsStructureSchema } from "../models/ResultsStructure";
+import { useErrorStore } from "../stores/errorStore";
 import { useEventStructureStore } from "../stores/eventStructureStore";
 import { useMembersStore } from "../stores/membersStore";
 import { useResultsStore } from "../stores/resultsStore";
 
-function uploadAndSet<T>(
-  event: React.ChangeEvent<HTMLInputElement>,
-  setter: (data: T) => void,
-): void {
-  const file = event.target.files?.[0];
+const memberArraySchema = z.array(memberSchema);
+
+function uploadWithSchema<T>(
+  file: File | null,
+  label: string,
+  schema: z.ZodType<T>,
+  set: (data: T) => void,
+) {
   if (!file) return;
+  const { addError } = useErrorStore.getState();
   const reader = new FileReader();
-  reader.onload = (e) => {
-    const dataString = e?.target?.result;
-    if (typeof dataString !== "string") return;
-    setter(JSON.parse(dataString as string));
+  reader.onload = ({ target }) => {
+    if (typeof target?.result !== "string") return;
+    try {
+      const parsed = JSON.parse(target.result);
+      const result = schema.safeParse(parsed);
+      if (!result.success) {
+        return addError("Wrong structure", `${label}: ${result.error.message}`);
+      }
+      set(result.data);
+    } catch {
+      addError("Invalid JSON", `${label} file is not valid JSON`);
+    }
   };
   reader.readAsText(file);
 }
 
-export function uploadEventStructure(
-  event: React.ChangeEvent<HTMLInputElement>,
-): void {
-  uploadAndSet(event, (data) =>
+export function uploadEventStructure(file: File | null): void {
+  uploadWithSchema(file, "EventStructure", eventStructureSchema, (data) =>
     useEventStructureStore.getState().setEventStructure(data),
   );
 }
 
-export function uploadMembers(
-  event: React.ChangeEvent<HTMLInputElement>,
-): void {
-  uploadAndSet(event, (data) => useMembersStore.getState().setMembers(data));
+export function uploadMembers(file: File | null): void {
+  uploadWithSchema(file, "Members", memberArraySchema, (data) =>
+    useMembersStore.getState().setMembers(data),
+  );
 }
 
-export function uploadResults(
-  event: React.ChangeEvent<HTMLInputElement>,
-): void {
-  uploadAndSet(event, (data) => useResultsStore.getState().setResults(data));
+export function uploadResults(file: File | null): void {
+  uploadWithSchema(file, "Results", resultsStructureSchema, (data) =>
+    useResultsStore.getState().setResults(data),
+  );
 }
 
 export function downloadJson(data: unknown, filename: string): void {
