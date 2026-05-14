@@ -9,8 +9,7 @@
     "build": "react-router build",
     "lint": "react-router typegen && tsc && eslint .",
     "preview": "vite preview",
-    "postbuild": "cp build/client/index.html build/client/404.html && touch build/client/.nojekyll",
-    "deploy": "pnpm run build && pnpm run postbuild && gh-pages -d build/client"
+    "postbuild": "cp build/client/index.html build/client/404.html && touch build/client/.nojekyll"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -35,7 +34,6 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.1",
-    "gh-pages": "^6.3.0",
     "globals": "^17.3.0",
     "postcss": "^8.5.14",
     "postcss-preset-mantine": "^1.18.0",
