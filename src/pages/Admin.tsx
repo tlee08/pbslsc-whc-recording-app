@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Code,
   FileButton,
@@ -17,19 +16,16 @@ import {
   IconUpload,
 } from "@tabler/icons-react";
 import { useCatStore } from "../stores/catStore";
-import { useEventStructureStore } from "../stores/eventStructureStore";
 import { useMembersStore } from "../stores/membersStore";
 import { usePreregisterStore } from "../stores/preregisterStore";
 import { useResultsStore } from "../stores/resultsStore";
 import {
   downloadJson,
-  uploadEventStructure,
   uploadMembers,
   uploadResults,
 } from "../utils/storageUtils";
 
 export default function Admin() {
-  const eventStructure = useEventStructureStore((s) => s.eventStructure);
   const members = useMembersStore((s) => s.members);
   const results = useResultsStore((s) => s.results);
 
@@ -46,17 +42,6 @@ export default function Admin() {
       <Stack gap={{ base: 4, sm: 8 }} p={{ base: 4, sm: 8 }}>
         <Paper shadow="md" withBorder p={{ base: 6, sm: 8 }}>
           <Group gap={{ base: 4, sm: 8 }} justify="center">
-            <FileButton onChange={uploadEventStructure} accept=".json">
-              {(props) => (
-                <Button
-                  {...props}
-                  leftSection={<IconUpload size={16} />}
-                  size="sm"
-                >
-                  Upload eventStructure
-                </Button>
-              )}
-            </FileButton>
             <FileButton onChange={uploadMembers} accept=".json">
               {(props) => (
                 <Button
@@ -95,7 +80,6 @@ export default function Admin() {
               color="red"
               leftSection={<IconTrash size={16} />}
               onClick={() => {
-                useEventStructureStore.getState().reset();
                 useMembersStore.getState().reset();
                 useResultsStore.getState().reset();
                 useCatStore.getState().reset();
@@ -110,7 +94,6 @@ export default function Admin() {
 
         <Group grow align="flex-start" gap={{ base: 4, sm: 8 }} wrap="wrap">
           {[
-            { title: "eventStructure", data: eventStructure },
             { title: "members", data: members },
             { title: "results", data: results },
           ].map(({ title, data }) => (

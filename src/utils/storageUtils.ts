@@ -1,9 +1,7 @@
 import { z } from "zod";
-import { eventStructureSchema } from "../models/EventStructure";
 import { memberSchema } from "../models/Member";
 import { resultsStructureSchema } from "../models/ResultsStructure";
 import { useErrorStore } from "../stores/errorStore";
-import { useEventStructureStore } from "../stores/eventStructureStore";
 import { useMembersStore } from "../stores/membersStore";
 import { useResultsStore } from "../stores/resultsStore";
 
@@ -32,12 +30,6 @@ function uploadWithSchema<T>(
     }
   };
   reader.readAsText(file);
-}
-
-export function uploadEventStructure(file: File | null): void {
-  uploadWithSchema(file, "EventStructure", eventStructureSchema, (data) =>
-    useEventStructureStore.getState().setEventStructure(data),
-  );
 }
 
 export function uploadMembers(file: File | null): void {

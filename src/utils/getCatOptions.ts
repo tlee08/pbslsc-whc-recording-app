@@ -1,35 +1,15 @@
-import type EventStructure from "../models/EventStructure";
+import type ResultsStructure from "../models/ResultsStructure";
 
-function getDatesOptions(eventStructure: EventStructure) {
-  return eventStructure.dates.map((e) => ({
-    label: e.label,
-    value: e.value,
-  }));
+function getDatesOptions(results: ResultsStructure) {
+  return Object.keys(results).map((key) => ({ label: key, value: key }));
 }
-function getEventsOptions(eventStructure: EventStructure, dateValue: string) {
-  return (
-    eventStructure.dates
-      .find((e) => e.value === dateValue)
-      ?.events.map((e) => ({
-        label: e.label,
-        value: e.value,
-      })) ?? []
-  );
+
+function getEventsOptions(results: ResultsStructure, dateValue: string) {
+  return Object.keys(results[dateValue] ?? {}).map((key) => ({ label: key, value: key }));
 }
-function getGendersOptions(
-  eventStructure: EventStructure,
-  dateValue: string,
-  eventValue: string,
-) {
-  return (
-    eventStructure.dates
-      .find((e) => e.value === dateValue)
-      ?.events.find((e) => e.value === eventValue)
-      ?.genders.map((e) => ({
-        label: e.label,
-        value: e.value,
-      })) ?? []
-  );
+
+function getGendersOptions(results: ResultsStructure, dateValue: string, eventValue: string) {
+  return Object.keys(results[dateValue]?.[eventValue] ?? {}).map((key) => ({ label: key, value: key }));
 }
 
 export { getDatesOptions, getEventsOptions, getGendersOptions };

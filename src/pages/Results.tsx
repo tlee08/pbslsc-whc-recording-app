@@ -33,6 +33,7 @@ export default function Results() {
   const setResultsForScope = useResultsStore((s) => s.setResultsForScope);
   const [preregisterCheckedState, setPreregisterCheckedState] =
     React.useState<boolean>(false);
+  const [searchValue, setSearchValue] = React.useState("");
 
   const scopeResults = React.useMemo(
     () => results?.[date]?.[event]?.[gender] ?? [],
@@ -98,11 +99,12 @@ export default function Results() {
             shadow="md"
             withBorder
             p={{ base: 6, sm: 8 }}
-            pos={{ base: "static", sm: "sticky" }}
-            top={{ sm: "calc(var(--app-shell-header-height) + 8px)" }}
+            pos="sticky"
+            top="calc(var(--app-shell-header-height) + 8px)"
             style={{ zIndex: 100 }}
           >
-            <Group align="flex-end">
+            {/* Desktop: single row */}
+            <Group align="flex-end" visibleFrom="sm">
               <Autocomplete
                 style={{ flex: 1, minWidth: 0 }}
                 data={availableMembers.map((m) => ({
@@ -110,11 +112,16 @@ export default function Results() {
                   label: m.title,
                 }))}
                 placeholder="Member"
+                value={searchValue}
+                onChange={setSearchValue}
                 onOptionSubmit={(value) => {
                   const member = availableMembers.find(
                     (m) => m.title === value,
                   );
-                  if (member) addResult(member);
+                  if (member) {
+                    addResult(member);
+                    setSearchValue("");
+                  }
                 }}
               />
               <Group>
@@ -140,6 +147,51 @@ export default function Results() {
                 </Button>
               </Group>
             </Group>
+
+            {/* Mobile: stacked */}
+            <Stack gap="xs" hiddenFrom="sm">
+              <Autocomplete
+                style={{ width: "100%" }}
+                data={availableMembers.map((m) => ({
+                  value: m.title,
+                  label: m.title,
+                }))}
+                placeholder="Member"
+                value={searchValue}
+                onChange={setSearchValue}
+                onOptionSubmit={(value) => {
+                  const member = availableMembers.find(
+                    (m) => m.title === value,
+                  );
+                  if (member) {
+                    addResult(member);
+                    setSearchValue("");
+                  }
+                }}
+              />
+              <Group justify="space-between" wrap="nowrap">
+                <Switch
+                  label="Preregistered"
+                  checked={preregisterCheckedState}
+                  onChange={(e) =>
+                    setPreregisterCheckedState(e.currentTarget.checked)
+                  }
+                />
+                <Button
+                  leftSection={<IconUserPlus size={16} />}
+                  onClick={() =>
+                    bulkAddPreregisterItems(
+                      scopeResults.map(
+                        (i) => members.find((j) => j.title === i.title) || null,
+                      ),
+                    )
+                  }
+                  size="sm"
+                >
+                  Add Preregister
+                </Button>
+              </Group>
+            </Stack>
           </Paper>
 
           <DragDropContext onDragEnd={reorderResults}>

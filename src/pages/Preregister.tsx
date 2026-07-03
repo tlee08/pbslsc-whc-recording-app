@@ -25,6 +25,7 @@ export default function Preregister() {
     removePreregisterItem,
   } = usePreregisterStore();
   const members = useMembersStore((s) => s.members);
+  const [searchValue, setSearchValue] = React.useState("");
 
   const filteredPreregisterState = React.useMemo(
     () => preregisterState.filter((member) => member.gender === genderState),
@@ -75,7 +76,8 @@ export default function Preregister() {
             top={{ sm: 8 }}
             style={{ zIndex: 100 }}
           >
-            <Group>
+            {/* Desktop: single row */}
+            <Group visibleFrom="sm">
               <Autocomplete
                 style={{ flex: 1, minWidth: 0 }}
                 data={availableMembers.map((m) => ({
@@ -83,12 +85,15 @@ export default function Preregister() {
                   label: m.title,
                 }))}
                 placeholder="Member"
-                onChange={(_value, option) => {
-                  if (option) {
-                    const member = availableMembers.find(
-                      (m) => m.title === option.value,
-                    );
-                    if (member) addPreregisterItem(member);
+                value={searchValue}
+                onChange={setSearchValue}
+                onOptionSubmit={(value) => {
+                  const member = availableMembers.find(
+                    (m) => m.title === value,
+                  );
+                  if (member) {
+                    addPreregisterItem(member);
+                    setSearchValue("");
                   }
                 }}
               />
@@ -100,6 +105,35 @@ export default function Preregister() {
                 Clear
               </Button>
             </Group>
+
+            {/* Mobile: stacked */}
+            <Stack gap="xs" hiddenFrom="sm">
+              <Autocomplete
+                style={{ width: "100%" }}
+                data={availableMembers.map((m) => ({
+                  value: m.title,
+                  label: m.title,
+                }))}
+                placeholder="Member"
+                value={searchValue}
+                onChange={setSearchValue}
+                onOptionSubmit={(value) => {
+                  const member = availableMembers.find(
+                    (m) => m.title === value,
+                  );
+                  if (member) {
+                    addPreregisterItem(member);
+                    setSearchValue("");
+                  }
+                }}
+              />
+              <Button
+                leftSection={<IconX size={16} />}
+                onClick={openClearConfirm}
+              >
+                Clear
+              </Button>
+            </Stack>
           </Paper>
 
           <Paper shadow="md" withBorder p={{ base: 6, sm: 8 }}>
