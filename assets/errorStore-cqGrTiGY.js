@@ -1,0 +1,1 @@
+import{z as t}from"./catStore-C5DOAsDe.js";let d=0;const a=t()(s=>({errors:[],addError:(r,o)=>s(e=>({errors:[...e.errors,{id:++d,title:r,message:o}]})),dismissError:r=>s(o=>({errors:o.errors.filter(e=>e.id!==r)}))}));export{a as u};
