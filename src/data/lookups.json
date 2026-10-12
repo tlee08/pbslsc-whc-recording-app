@@ -1,0 +1,74 @@
+{
+  "genders": {
+    "m": { "label": "Male" },
+    "f": { "label": "Female" },
+    "mixed": { "label": "Mixed" },
+    "family": { "label": "Family" }
+  },
+  "events": {
+    "swim": { "label": "Swim", "genders": ["m", "f"] },
+    "board": { "label": "Board", "genders": ["m", "f"] },
+    "ski": { "label": "Ski", "genders": ["m", "f"] },
+    "run": { "label": "Run", "genders": ["m", "f"] },
+    "flags": { "label": "Flags", "genders": ["m", "f"] },
+    "cswim": { "label": "Swim", "genders": ["m", "f"] },
+    "cboard_rescue": { "label": "Board - Rescue", "genders": ["m", "f"] },
+    "cboard_mal": { "label": "Board - Mal", "genders": ["m", "f"] },
+    "cski_surf": { "label": "Ski - Surf", "genders": ["m", "f"] },
+    "cski_racing": { "label": "Ski - Racing", "genders": ["m", "f"] },
+    "mswim": { "label": "Marathon Swim", "genders": ["m", "f"] },
+    "mboard": { "label": "Marathon Board", "genders": ["m", "f"] },
+    "mski": { "label": "Marathon Ski", "genders": ["m", "f"] },
+    "mrun": { "label": "Marathon Run", "genders": ["m", "f"] },
+    "jcc_individual": { "label": "JCC - Individual", "genders": ["m", "f"] },
+    "jcc_team": {
+      "label": "JCC - Team",
+      "genders": ["m", "f", "mixed", "family"]
+    },
+    "imdl": { "label": "Iron Man - Diamond Lady", "genders": ["m", "f"] }
+  },
+  "series": {
+    "whc": {
+      "label": "WHC",
+      "events": ["swim", "board", "ski", "run", "flags"]
+    },
+    "cchamps": {
+      "label": "Club Champs",
+      "events": [
+        "cswim",
+        "cboard_rescue",
+        "cboard_mal",
+        "cski_surf",
+        "cski_racing"
+      ]
+    },
+    "mswim": {
+      "label": "Marathon Swim",
+      "events": ["mswim"]
+    },
+    "mboard": {
+      "label": "Marathon Board",
+      "events": ["mboard"]
+    },
+    "mski": {
+      "label": "Marathon Ski",
+      "events": ["mski"]
+    },
+    "mrun": {
+      "label": "Marathon Run",
+      "events": ["mrun"]
+    },
+    "jcc": {
+      "label": "Jack Carter Cup",
+      "events": ["jcc_individual", "jcc_team"]
+    },
+    "xmas": {
+      "label": "Xmas",
+      "events": ["swim", "board", "ski", "run", "flags"]
+    },
+    "imdl": {
+      "label": "Iron Man - Diamond Lady",
+      "events": ["imdl"]
+    }
+  }
+}

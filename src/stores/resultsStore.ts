@@ -1,16 +1,15 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type MemberShort from "../models/MemberShort";
 import type ResultsStructure from "../models/ResultsStructure";
 
 type ResultsState = {
   results: ResultsStructure;
   setResults: (data: ResultsStructure) => void;
   setResultsForScope: (
-    date: string,
+    meetingId: string,
     event: string,
     gender: string,
-    items: MemberShort[],
+    items: string[],
   ) => void;
   reset: () => void;
 };
@@ -20,14 +19,14 @@ export const useResultsStore = create<ResultsState>()(
     (set) => ({
       results: {},
       setResults: (data) => set({ results: data }),
-      setResultsForScope: (date, event, gender, items) =>
+      setResultsForScope: (meetingId, event, gender, items) =>
         set((state) => ({
           results: {
             ...state.results,
-            [date]: {
-              ...state.results[date],
+            [meetingId]: {
+              ...state.results[meetingId],
               [event]: {
-                ...(state.results[date]?.[event] ?? {}),
+                ...(state.results[meetingId]?.[event] ?? {}),
                 [gender]: items,
               },
             },

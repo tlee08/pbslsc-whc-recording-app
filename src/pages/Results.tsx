@@ -19,7 +19,6 @@ import {
 import { IconList, IconTrash, IconUserPlus } from "@tabler/icons-react";
 import React from "react";
 import type Member from "../models/Member";
-import type MemberShort from "../models/MemberShort";
 import { useCatStore } from "../stores/catStore";
 import { useMembersStore } from "../stores/membersStore";
 import { usePreregisterStore } from "../stores/preregisterStore";
@@ -27,7 +26,7 @@ import { useResultsStore } from "../stores/resultsStore";
 
 export default function Results() {
   const { preregisterState, bulkAddPreregisterItems } = usePreregisterStore();
-  const { date, event, gender } = useCatStore();
+  const { meetingId, event, gender } = useCatStore();
   const members = useMembersStore((s) => s.members);
   const results = useResultsStore((s) => s.results);
   const setResultsForScope = useResultsStore((s) => s.setResultsForScope);
@@ -36,15 +35,15 @@ export default function Results() {
   const [searchValue, setSearchValue] = React.useState("");
 
   const scopeResults = React.useMemo(
-    () => results?.[date]?.[event]?.[gender] ?? [],
-    [results, date, event, gender],
+    () => results?.[meetingId]?.[event]?.[gender] ?? [],
+    [results, meetingId, event, gender],
   );
 
   const availableMembers = React.useMemo(() => {
     const filteredMembers = members
       .filter((member) => member.gender === gender)
       .filter(
-        (member) => !scopeResults.some((result) => result.id === member.id),
+        (member) => !scopeResults.some((title) => title === member.title),
       );
     return preregisterCheckedState
       ? filteredMembers.filter((i) =>
@@ -60,13 +59,15 @@ export default function Results() {
   ]);
 
   const addResult = (member: Member) => {
-    const newResult: MemberShort = { id: member.id, title: member.title };
-    setResultsForScope(date, event, gender, [...scopeResults, newResult]);
+    setResultsForScope(meetingId, event, gender, [
+      ...scopeResults,
+      member.title,
+    ]);
   };
 
   const removeResult = (index: number) => {
     setResultsForScope(
-      date,
+      meetingId,
       event,
       gender,
       scopeResults.filter((_, i) => i !== index),
@@ -80,7 +81,7 @@ export default function Results() {
     const items = [...scopeResults];
     const [removed] = items.splice(startIndex, 1);
     items.splice(endIndex, 0, removed);
-    setResultsForScope(date, event, gender, items);
+    setResultsForScope(meetingId, event, gender, items);
   };
 
   return (
@@ -93,8 +94,8 @@ export default function Results() {
         Results
       </Title>
 
-      {date && event && gender ? (
-        <Stack gap={{ base: 4, sm: 8 }} p={{ base: 4, sm: 8 }}>
+      {meetingId && event && gender ? (
+        <Stack gap={8} p={{ base: 4, sm: 8 }}>
           <Paper
             shadow="md"
             withBorder
@@ -137,7 +138,8 @@ export default function Results() {
                   onClick={() =>
                     bulkAddPreregisterItems(
                       scopeResults.map(
-                        (i) => members.find((j) => j.title === i.title) || null,
+                        (title) =>
+                          members.find((j) => j.title === title) || null,
                       ),
                     )
                   }
@@ -182,7 +184,8 @@ export default function Results() {
                   onClick={() =>
                     bulkAddPreregisterItems(
                       scopeResults.map(
-                        (i) => members.find((j) => j.title === i.title) || null,
+                        (title) =>
+                          members.find((j) => j.title === title) || null,
                       ),
                     )
                   }
@@ -204,12 +207,12 @@ export default function Results() {
                   withBorder
                   p={{ base: 6, sm: 8 }}
                 >
-                  <Stack gap={{ base: 4, sm: 8 }}>
-                    {scopeResults.map((result, index) => (
+                  <Stack gap={8}>
+                    {scopeResults.map((title, index) => (
                       <Draggable
-                        key={result.id}
+                        key={title}
                         index={index}
-                        draggableId={`${result.id}_id`}
+                        draggableId={`${title}_id`}
                       >
                         {(provided) => (
                           <Card
@@ -220,7 +223,7 @@ export default function Results() {
                           >
                             <Group justify="space-between" wrap="nowrap" py={4}>
                               <Text fz={{ base: "sm", sm: "md" }}>
-                                {`${index + 1}. ${result.title}`}
+                                {`${index + 1}. ${title}`}
                               </Text>
                               <ActionIcon
                                 variant="subtle"

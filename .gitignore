@@ -149,4 +149,4 @@ build/
 .react-router/
 
 # Data files
-data/
+/data/

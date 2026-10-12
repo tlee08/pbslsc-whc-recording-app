@@ -2,10 +2,10 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 type CatState = {
-  date: string;
+  meetingId: string;
   event: string;
   gender: string;
-  setDate: (value: string) => void;
+  setMeetingId: (value: string) => void;
   setEvent: (value: string) => void;
   setGender: (value: string) => void;
   reset: () => void;
@@ -14,13 +14,13 @@ type CatState = {
 export const useCatStore = create<CatState>()(
   persist(
     (set) => ({
-      date: "",
+      meetingId: "",
       event: "",
       gender: "",
-      setDate: (value) => set({ date: value, event: "", gender: "" }),
+      setMeetingId: (value) => set({ meetingId: value, event: "", gender: "" }),
       setEvent: (value) => set({ event: value, gender: "" }),
       setGender: (value) => set({ gender: value }),
-      reset: () => set({ date: "", event: "", gender: "" }),
+      reset: () => set({ meetingId: "", event: "", gender: "" }),
     }),
     {
       name: "cat",

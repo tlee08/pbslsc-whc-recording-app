@@ -37,7 +37,7 @@ export default function Preregister() {
         .filter((member) => member.gender === genderState)
         .filter(
           (member) =>
-            !preregisterState.some((prereg) => prereg.id === member.id),
+            !preregisterState.some((prereg) => prereg.title === member.title),
         ),
     [members, genderState, preregisterState],
   );
@@ -67,7 +67,7 @@ export default function Preregister() {
       </Title>
 
       {genderState ? (
-        <Stack gap={{ base: 4, sm: 8 }} p={{ base: 4, sm: 8 }}>
+        <Stack gap={8} p={{ base: 4, sm: 8 }}>
           <Paper
             shadow="md"
             withBorder
@@ -137,9 +137,9 @@ export default function Preregister() {
           </Paper>
 
           <Paper shadow="md" withBorder p={{ base: 6, sm: 8 }}>
-            <Stack gap={{ base: 4, sm: 8 }}>
+            <Stack gap={8}>
               {filteredPreregisterState.map((member, index) => (
-                <Card key={member.id} withBorder>
+                <Card key={member.title} withBorder>
                   <Group justify="space-between" wrap="nowrap" py={4}>
                     <Text fz={{ base: "sm", sm: "md" }} style={{ flex: 1 }}>
                       {member.title}

@@ -39,9 +39,9 @@ export default function Admin() {
         Admin
       </Title>
 
-      <Stack gap={{ base: 4, sm: 8 }} p={{ base: 4, sm: 8 }}>
+      <Stack gap={8} p={{ base: 4, sm: 8 }}>
         <Paper shadow="md" withBorder p={{ base: 6, sm: 8 }}>
-          <Group gap={{ base: 4, sm: 8 }} justify="center">
+          <Group gap={8} justify="center">
             <FileButton onChange={uploadMembers} accept=".json">
               {(props) => (
                 <Button
@@ -68,7 +68,7 @@ export default function Admin() {
         </Paper>
 
         <Paper shadow="md" withBorder p={{ base: 6, sm: 8 }}>
-          <Group gap={{ base: 4, sm: 8 }} justify="center">
+          <Group gap={8} justify="center">
             <Button
               leftSection={<IconDownload size={16} />}
               onClick={() => downloadJson(results, "whc_results.json")}
@@ -92,7 +92,7 @@ export default function Admin() {
           </Group>
         </Paper>
 
-        <Group grow align="flex-start" gap={{ base: 4, sm: 8 }} wrap="wrap">
+        <Group grow align="flex-start" gap={8} wrap="wrap">
           {[
             { title: "members", data: members },
             { title: "results", data: results },
