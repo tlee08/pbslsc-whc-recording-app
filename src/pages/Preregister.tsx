@@ -93,7 +93,7 @@ export default function Preregister() {
                   );
                   if (member) {
                     addPreregisterItem(member);
-                    setSearchValue("");
+                    setTimeout(() => setSearchValue(""), 0);
                   }
                 }}
               />
@@ -123,7 +123,7 @@ export default function Preregister() {
                   );
                   if (member) {
                     addPreregisterItem(member);
-                    setSearchValue("");
+                    setTimeout(() => setSearchValue(""), 0);
                   }
                 }}
               />

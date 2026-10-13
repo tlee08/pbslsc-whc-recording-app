@@ -121,7 +121,7 @@ export default function Results() {
                   );
                   if (member) {
                     addResult(member);
-                    setSearchValue("");
+                    setTimeout(() => setSearchValue(""), 0);
                   }
                 }}
               />
@@ -167,7 +167,7 @@ export default function Results() {
                   );
                   if (member) {
                     addResult(member);
-                    setSearchValue("");
+                    setTimeout(() => setSearchValue(""), 0);
                   }
                 }}
               />
