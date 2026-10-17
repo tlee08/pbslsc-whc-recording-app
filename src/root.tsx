@@ -8,6 +8,7 @@ import {
   Notification,
   Stack,
   Title,
+  useAppShellResize,
 } from "@mantine/core";
 import "@mantine/core/styles.css";
 import { useDisclosure } from "@mantine/hooks";
@@ -66,6 +67,7 @@ function ErrorNotifications() {
 
 export function Layout({ children }: { children: ReactNode }) {
   const [opened, { toggle, close }] = useDisclosure();
+  const resize = useAppShellResize({ navbar: { min: 180, max: 480 } });
 
   return (
     <html lang="en">
@@ -87,6 +89,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 collapsed: { mobile: !opened },
               }}
               padding={{ base: "xs", sm: "md" }}
+              resize={resize}
             >
               <AppShell.Header>
                 <Group h="100%" px="md">
