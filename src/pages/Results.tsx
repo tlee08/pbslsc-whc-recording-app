@@ -31,6 +31,8 @@ export default function Results() {
   const setResultsForScope = useResultsStore((s) => s.setResultsForScope);
   const [preregisterCheckedState, setPreregisterCheckedState] =
     React.useState<boolean>(false);
+  const [nonMembersCheckedState, setNonMembersCheckedState] =
+    React.useState<boolean>(false);
   const [searchValue, setSearchValue] = React.useState("");
 
   const scopeResults = React.useMemo(
@@ -67,7 +69,7 @@ export default function Results() {
   );
   const optionsData: { value: string; label: string; isCustom?: boolean }[] = [
     ...availableMembers.map((m) => ({ value: m.title, label: m.title })),
-    ...(trimmed && !hasExactMatch
+    ...(nonMembersCheckedState && trimmed && !hasExactMatch
       ? [{ value: trimmed, label: trimmed, isCustom: true }]
       : []),
   ];
@@ -83,7 +85,7 @@ export default function Results() {
     option: { value: string; isCustom?: boolean };
   }) =>
     option.isCustom ? (
-      <Text c="blue" fw={500}>
+      <Text c="#18208c" fw={500}>
         Add “{option.value}”
       </Text>
     ) : (
@@ -96,14 +98,6 @@ export default function Results() {
         (title) => members.find((j) => j.title === title) || null,
       ),
     );
-
-  const preregisterSwitch = (
-    <Switch
-      label="Preregistered"
-      checked={preregisterCheckedState}
-      onChange={(e) => setPreregisterCheckedState(e.currentTarget.checked)}
-    />
-  );
 
   const removeResult = (index: number) => {
     setResultsForScope(
@@ -144,33 +138,34 @@ export default function Results() {
             top="calc(var(--app-shell-header-height) + 8px)"
             style={{ zIndex: 100 }}
           >
-            {/* Desktop: single row */}
-            <Group align="flex-end" visibleFrom="sm">
-              <Autocomplete
-                style={{ flex: 1, minWidth: 0 }}
-                data={optionsData}
-                placeholder="Member"
-                value={searchValue}
-                onChange={setSearchValue}
-                onOptionSubmit={handleOptionSubmit}
-                renderOption={renderOption}
-              />
-              <Group>
-                {preregisterSwitch}
-                <Button
-                  leftSection={<IconUserPlus size={16} />}
-                  onClick={addScopeToPreregister}
-                  size="sm"
-                >
-                  Add to Preregister
-                </Button>
-              </Group>
-            </Group>
+            <Stack gap="xs">
+              <Group justify="space-between" wrap="wrap">
+                <Switch
+                  label="Non-members"
+                  checked={nonMembersCheckedState}
+                  onChange={(e) =>
+                    setNonMembersCheckedState(e.currentTarget.checked)
+                  }
+                />
+                <Group gap="md">
+                  <Switch
+                    label="Preregistered"
+                    checked={preregisterCheckedState}
+                    onChange={(e) =>
+                      setPreregisterCheckedState(e.currentTarget.checked)
+                    }
+                  />
 
-            {/* Mobile: stacked */}
-            <Stack gap="xs" hiddenFrom="sm">
+                  <Button
+                    leftSection={<IconUserPlus size={16} />}
+                    onClick={addScopeToPreregister}
+                    size="sm"
+                  >
+                    Add to Preregister
+                  </Button>
+                </Group>
+              </Group>
               <Autocomplete
-                style={{ width: "100%" }}
                 data={optionsData}
                 placeholder="Member"
                 value={searchValue}
@@ -178,16 +173,6 @@ export default function Results() {
                 onOptionSubmit={handleOptionSubmit}
                 renderOption={renderOption}
               />
-              <Group justify="space-between" wrap="nowrap">
-                {preregisterSwitch}
-                <Button
-                  leftSection={<IconUserPlus size={16} />}
-                  onClick={addScopeToPreregister}
-                  size="sm"
-                >
-                  Add Preregister
-                </Button>
-              </Group>
             </Stack>
           </Paper>
 

@@ -16,6 +16,8 @@
     "cboard_mal": { "label": "Board - Mal", "genders": ["m", "f"] },
     "cski_surf": { "label": "Ski - Surf", "genders": ["m", "f"] },
     "cski_racing": { "label": "Ski - Racing", "genders": ["m", "f"] },
+    "crun": { "label": "Run", "genders": ["m", "f"] },
+    "cflags": { "label": "Flags", "genders": ["m", "f"] },
     "mswim": { "label": "Marathon Swim", "genders": ["m", "f"] },
     "mboard": { "label": "Marathon Board", "genders": ["m", "f"] },
     "mski": { "label": "Marathon Ski", "genders": ["m", "f"] },
@@ -39,7 +41,9 @@
         "cboard_rescue",
         "cboard_mal",
         "cski_surf",
-        "cski_racing"
+        "cski_racing",
+        "crun",
+        "cflags"
       ]
     },
     "mswim": {
