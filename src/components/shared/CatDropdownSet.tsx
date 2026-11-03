@@ -1,9 +1,9 @@
 import { Stack } from "@mantine/core";
 import { useCatStore } from "../../stores/catStore";
 import {
-  getMeetingOptions,
   getEventOptions,
   getGenderOptions,
+  getMeetingOptions,
 } from "../../utils/getCatOptions";
 import CatDropdown from "./CatDropdown";
 

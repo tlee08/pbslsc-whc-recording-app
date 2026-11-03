@@ -18,7 +18,6 @@ import {
 } from "@mantine/core";
 import { IconList, IconTrash, IconUserPlus } from "@tabler/icons-react";
 import React from "react";
-import type Member from "../models/Member";
 import { useCatStore } from "../stores/catStore";
 import { useMembersStore } from "../stores/membersStore";
 import { usePreregisterStore } from "../stores/preregisterStore";
@@ -58,12 +57,53 @@ export default function Results() {
     preregisterCheckedState,
   ]);
 
-  const addResult = (member: Member) => {
-    setResultsForScope(meetingId, event, gender, [
-      ...scopeResults,
-      member.title,
-    ]);
+  const addResult = (title: string) => {
+    setResultsForScope(meetingId, event, gender, [...scopeResults, title]);
   };
+
+  const trimmed = searchValue.trim();
+  const hasExactMatch = availableMembers.some(
+    (m) => m.title.toLowerCase() === trimmed.toLowerCase(),
+  );
+  const optionsData: { value: string; label: string; isCustom?: boolean }[] = [
+    ...availableMembers.map((m) => ({ value: m.title, label: m.title })),
+    ...(trimmed && !hasExactMatch
+      ? [{ value: trimmed, label: trimmed, isCustom: true }]
+      : []),
+  ];
+
+  const handleOptionSubmit = (value: string) => {
+    addResult(value);
+    setTimeout(() => setSearchValue(""), 0);
+  };
+
+  const renderOption = ({
+    option,
+  }: {
+    option: { value: string; isCustom?: boolean };
+  }) =>
+    option.isCustom ? (
+      <Text c="blue" fw={500}>
+        Add “{option.value}”
+      </Text>
+    ) : (
+      <Text>{option.value}</Text>
+    );
+
+  const addScopeToPreregister = () =>
+    bulkAddPreregisterItems(
+      scopeResults.map(
+        (title) => members.find((j) => j.title === title) || null,
+      ),
+    );
+
+  const preregisterSwitch = (
+    <Switch
+      label="Preregistered"
+      checked={preregisterCheckedState}
+      onChange={(e) => setPreregisterCheckedState(e.currentTarget.checked)}
+    />
+  );
 
   const removeResult = (index: number) => {
     setResultsForScope(
@@ -108,41 +148,18 @@ export default function Results() {
             <Group align="flex-end" visibleFrom="sm">
               <Autocomplete
                 style={{ flex: 1, minWidth: 0 }}
-                data={availableMembers.map((m) => ({
-                  value: m.title,
-                  label: m.title,
-                }))}
+                data={optionsData}
                 placeholder="Member"
                 value={searchValue}
                 onChange={setSearchValue}
-                onOptionSubmit={(value) => {
-                  const member = availableMembers.find(
-                    (m) => m.title === value,
-                  );
-                  if (member) {
-                    addResult(member);
-                    setTimeout(() => setSearchValue(""), 0);
-                  }
-                }}
+                onOptionSubmit={handleOptionSubmit}
+                renderOption={renderOption}
               />
               <Group>
-                <Switch
-                  label="Preregistered"
-                  checked={preregisterCheckedState}
-                  onChange={(e) =>
-                    setPreregisterCheckedState(e.currentTarget.checked)
-                  }
-                />
+                {preregisterSwitch}
                 <Button
                   leftSection={<IconUserPlus size={16} />}
-                  onClick={() =>
-                    bulkAddPreregisterItems(
-                      scopeResults.map(
-                        (title) =>
-                          members.find((j) => j.title === title) || null,
-                      ),
-                    )
-                  }
+                  onClick={addScopeToPreregister}
                   size="sm"
                 >
                   Add to Preregister
@@ -154,41 +171,18 @@ export default function Results() {
             <Stack gap="xs" hiddenFrom="sm">
               <Autocomplete
                 style={{ width: "100%" }}
-                data={availableMembers.map((m) => ({
-                  value: m.title,
-                  label: m.title,
-                }))}
+                data={optionsData}
                 placeholder="Member"
                 value={searchValue}
                 onChange={setSearchValue}
-                onOptionSubmit={(value) => {
-                  const member = availableMembers.find(
-                    (m) => m.title === value,
-                  );
-                  if (member) {
-                    addResult(member);
-                    setTimeout(() => setSearchValue(""), 0);
-                  }
-                }}
+                onOptionSubmit={handleOptionSubmit}
+                renderOption={renderOption}
               />
               <Group justify="space-between" wrap="nowrap">
-                <Switch
-                  label="Preregistered"
-                  checked={preregisterCheckedState}
-                  onChange={(e) =>
-                    setPreregisterCheckedState(e.currentTarget.checked)
-                  }
-                />
+                {preregisterSwitch}
                 <Button
                   leftSection={<IconUserPlus size={16} />}
-                  onClick={() =>
-                    bulkAddPreregisterItems(
-                      scopeResults.map(
-                        (title) =>
-                          members.find((j) => j.title === title) || null,
-                      ),
-                    )
-                  }
+                  onClick={addScopeToPreregister}
                   size="sm"
                 >
                   Add Preregister

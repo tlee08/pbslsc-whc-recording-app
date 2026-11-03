@@ -4,7 +4,9 @@ import type Member from "../models/Member";
 
 function dedupeAndSort(items: Member[]): Member[] {
   return items
-    .filter((i, idx, self) => idx === self.findIndex((j) => j.title === i.title))
+    .filter(
+      (i, idx, self) => idx === self.findIndex((j) => j.title === i.title),
+    )
     .sort((a, b) => a.title.localeCompare(b.title));
 }
 

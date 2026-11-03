@@ -25,7 +25,10 @@ function meetingLabel(id: string, seriesKey: string): string {
 }
 
 export function getMeetingOptions() {
-  return meetings.map((m) => ({ label: meetingLabel(m.id, m.series), value: m.id }));
+  return meetings.map((m) => ({
+    label: meetingLabel(m.id, m.series),
+    value: m.id,
+  }));
 }
 
 export function getEventOptions(meetingId: string) {

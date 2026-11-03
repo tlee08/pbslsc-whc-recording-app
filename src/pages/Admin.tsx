@@ -71,7 +71,7 @@ export default function Admin() {
           <Group gap={8} justify="center">
             <Button
               leftSection={<IconDownload size={16} />}
-              onClick={() => downloadJson(results, "whc_results.json")}
+              onClick={() => downloadJson(results, "results.json")}
               size="sm"
             >
               Download Results
